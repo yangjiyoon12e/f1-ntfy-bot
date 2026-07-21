@@ -1,17 +1,28 @@
 name: F1 Weekend Live Update
+
 on:
   schedule:
-    - cron: '*/5 * * * 5,6,0' # 금, 토, 일 5분마다 실행
-  workflow_dispatch:
+    # UTC 기준 금(5), 토(6), 일(0)에만 5분 간격으로 실행
+    - cron: '*/5 * * * 5,6,0'
+  workflow_dispatch: # 수동 실행 버튼
+
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      # 최신 v4 버전으로 변경 (Node.js 20+ 대응)
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 최신 v5 버전으로 변경 (Node.js 20+ 대응)
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
-      - run: pip install -r requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       - name: Run Script
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
